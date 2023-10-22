@@ -1,5 +1,7 @@
 package esprit.com.microservices.freelance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,23 +12,22 @@ public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @Column(name = "projectId", nullable = false)
+    private int projectId;
 
     @Column(name = "freelancerId", nullable = false)
     private int freelancerId;
 
-    @Column(name = "client_id", nullable = false)
+    @Column(name = "clientId", nullable = false)
     private int clientId;
 
     @Column(precision = 8, scale = 2)
     private BigDecimal projectCost;
 
     @Enumerated(EnumType.STRING)
-    private ContractStatus status = ContractStatus.PENDING;
+    private ContractStatus status;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -37,9 +38,9 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(Long id, Project project, int freelancerId, int clientId, BigDecimal projectCost, ContractStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Contract(int id, int projectId, int freelancerId, int clientId, BigDecimal projectCost, ContractStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.project = project;
+        this.projectId = projectId;
         this.freelancerId = freelancerId;
         this.clientId = clientId;
         this.projectCost = projectCost;
@@ -48,20 +49,20 @@ public class Contract {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public void setId(int id) {
         this.id = id;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public int getFreelancerId() {

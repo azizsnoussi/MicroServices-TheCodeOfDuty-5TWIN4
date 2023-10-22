@@ -25,8 +25,8 @@ public class KeycloakConfig {
     public final static String realm = "JobBoardKeycloack";
     public final static String clientId = "ProjContractServices";
     final static String clientSecret = "5cd46655-26db-4773-8556-4faac01a057b";
-    final static String userName = "aziz";
-    final static String password = "aziz";
+    final static String userName = "admin";
+    final static String password = "admin";
 
     public KeycloakConfig() {
     }

@@ -42,9 +42,6 @@ public class Project {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "project")
-    private List<Contract> contracts;
-
     public Project() {
     }
 
@@ -149,6 +146,7 @@ public class Project {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 
     public enum ProjectStatus {
         NOT_COMPLETED, COMPLETED

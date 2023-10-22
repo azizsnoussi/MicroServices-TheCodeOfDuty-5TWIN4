@@ -43,9 +43,9 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .disable()
                 .httpBasic()
                 .disable()
-                .authorizeRequests()
+                /*.authorizeRequests()
                 .antMatchers("/api/*").hasAuthority("user")
-                .and()
+                .and()*/
                 .authorizeRequests()
                 .antMatchers("/projects/user/*").hasAuthority("user")
                 .and()

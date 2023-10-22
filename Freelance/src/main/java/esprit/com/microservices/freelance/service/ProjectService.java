@@ -21,8 +21,16 @@ public class ProjectService {
     public Project updateProject(Project newProject, int id) {
         if (projectRepository.findById(id).isPresent()) {
             Project existingProject = projectRepository.findById(id).get();
-            // Update existingProject properties with newProject properties
-            // ...
+            existingProject.setTitle(newProject.getTitle());
+            existingProject.setDescription(newProject.getDescription());
+            existingProject.setImage(newProject.getImage());
+            existingProject.setClientId(newProject.getClientId());
+            existingProject.setCost(newProject.getCost());
+            existingProject.setStatus(newProject.getStatus());
+            existingProject.setRequiredSkills(newProject.getRequiredSkills());
+            existingProject.setCategory(newProject.getCategory());
+            existingProject.setCreatedAt(newProject.getCreatedAt());
+            existingProject.setUpdatedAt(newProject.getUpdatedAt());
             return projectRepository.save(existingProject);
         } else {
             return null;

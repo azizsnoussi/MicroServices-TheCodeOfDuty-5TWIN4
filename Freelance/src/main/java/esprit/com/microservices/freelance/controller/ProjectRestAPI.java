@@ -21,7 +21,7 @@ public class ProjectRestAPI {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping("/admin")
+    @GetMapping
     public ResponseEntity<List<Project>> getAllAdminProjects() {
         List<Project> projects = projectService.getAllProjects();
         if (projects.isEmpty()) {

@@ -1,9 +1,7 @@
 package esprit.com.microservices.freelance.service;
 
 import esprit.com.microservices.freelance.model.Contract;
-import esprit.com.microservices.freelance.model.Project;
 import esprit.com.microservices.freelance.repository.ContractRepository;
-import esprit.com.microservices.freelance.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +14,13 @@ public class ContractService {
     @Autowired
     private ContractRepository contractRepository;
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
     public Contract addContract(Contract contract) {
-        int projectId = contract.getProject().getId();
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-
-        if (projectOptional.isPresent()) {
-            Project project = projectOptional.get();
-            contract.setProject(project);
-            return contractRepository.save(contract);
-        } else {
-            throw new IllegalArgumentException("Invalid project ID");
-        }
+        return contractRepository.save(contract);
     }
     public Contract updateContract(Contract newContract, int id) {
         if (contractRepository.findById(id).isPresent()) {
             Contract existingContract = contractRepository.findById(id).get();
-            existingContract.setProject(newContract.getProject());
+            existingContract.setProjectId(newContract.getProjectId());
             existingContract.setFreelancerId(newContract.getFreelancerId());
             existingContract.setClientId(newContract.getClientId());
             existingContract.setProjectCost(newContract.getProjectCost());
@@ -43,7 +29,7 @@ public class ContractService {
             existingContract.setUpdatedAt(newContract.getUpdatedAt());
             return contractRepository.save(existingContract);
         } else {
-            return null;
+            throw new IllegalArgumentException("Invalid contract");
         }
     }
 

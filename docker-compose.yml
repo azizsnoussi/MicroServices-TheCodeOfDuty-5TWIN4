@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  
+  Freelance:
+    container_name: freelance
+    image: "freelance"
+    build: .\Freelance
+    hostname: freelance
+    ports:
+      - "8282:8282"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://serviceregistry:8761/eureka/
+    depends_on:
+      - Eureka
+      
+  
+  
+  Eureka:
+    container_name: serviceregistry
+    build: .\EurekaServer
+    ports:
+      - "8761:8761"
+    hostname: serviceregistry
+    image: "eureka"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://serviceregistry:8761/eureka/
+
+  cloud-gateway-service:
+    container_name: cloud-gateway-service
+    build: ./API_Gateway_Server
+    ports:
+      - "8081:8081"
+    hostname: cloud-gateway-service
+    image: "cloud-gateway-service"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://serviceregistry:8761/eureka/
+    depends_on:
+      - Eureka
