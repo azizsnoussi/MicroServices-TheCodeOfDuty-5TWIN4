@@ -1,0 +1,130 @@
+version: "2.4"
+
+services:
+
+  articles:
+    container_name: articleservice
+    build: .\FreelanceCRUD
+    ports:
+      - "8760:8082"
+    image: "freelancecrud:v1"
+    depends_on:
+      - Eureka
+      - db-mysql-article
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-article:3306/microservice?createDatabaseIfNotExist=true&userSSL=false&max_allowed_packet=15728640
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+  reviews:
+    container_name: reviewservice
+    build: .\Review
+    ports:
+      - "8763:8089"
+    image: "review:v1"
+    depends_on:
+      - Eureka
+      - db-mysql-article
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-article:3306/review?createDatabaseIfNotExist=true&userSSL=false&max_allowed_packet=15728640
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+  tasks:
+    container_name: taskservice
+    build: .\Task
+    ports:
+      - "8776:8882"
+    image: "task:v1"
+    depends_on:
+      - Eureka
+      - db-mysql-article
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-article:3306/freelancetache?createDatabaseIfNotExist=true&userSSL=false&max_allowed_packet=15728640
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+
+  db-mysql-article:
+    image: "mysql:5.6"
+    container_name: db-mysql-article
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      #- MYSQL_DATABASE=job
+    ports:
+      - "3307:3306"
+  
+  portfolio:
+    container_name: portfolioservice
+    image: "portfolio:v1"
+    build: .\Portfolio
+    ports:
+      - "8764:8084"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+    depends_on:
+      - Eureka
+
+  Freelance:
+    container_name: freelanceservice
+    image: "freelanceservice:v1"
+    build: .\Freelance
+    ports:
+      - "8785:8085"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+    depends_on:
+      - Eureka
+  
+  
+
+  Eureka:
+    container_name: eurekaservice
+    build: .\EurekaServer
+    ports:
+      - "8761:8761"
+    hostname: eurekaservice
+    image: "eureka:v1"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+
+
+  cloud-gateway-service:
+    container_name: cloud-gateway-service
+    build: ./API_Gateway_Server
+    ports:
+      - "8759:8081"
+    image: "apigateway:v1"
+    restart: always
+    depends_on:
+      - Eureka
+      - Freelance
+      - portfolio
+      - tasks
+    environment:
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_ID=Freelance
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://Freelance:8085
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0=Path=/api/projects/**
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://Eureka:8761/eureka/
+
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_ID=articles
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://articles:8082
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/articles/**
+
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_ID=reviews
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://reviews:8089
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0=Path=/review/**
+
+      - SPRING_CLOUD_GATEWAY_ROUTES_3_ID=portfolio
+      - SPRING_CLOUD_GATEWAY_ROUTES_3_URI=http://portfolio:8084
+      - SPRING_CLOUD_GATEWAY_ROUTES_3_PREDICATES_0=Path=/api/portfolios/**
+
+      - SPRING_CLOUD_GATEWAY_ROUTES_4_ID=tasks
+      - SPRING_CLOUD_GATEWAY_ROUTES_4_URI=http://tasks:8882
+      - SPRING_CLOUD_GATEWAY_ROUTES_4_PREDICATES_0=Path=/api/tasks/**
+
+
+
+      
+
+    
