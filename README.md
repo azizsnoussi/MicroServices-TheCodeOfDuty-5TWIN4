@@ -9,19 +9,22 @@ Git
 Maven
 Docker
 Docker Compose
+
 Step 1: Clone the Project
 Clone the repository to your local machine using Git:
 
 bash
 Copy code
-git clone https://github.com/yourusername/your-project.git
+git clone https://github.com/azizsnoussi/MicroServices-TheCodeOfDuty-5TWIN4
 cd your-project
+
 Step 2: Build the Project
 Use Maven to build the project. Make sure you are in the project root directory:
 
 bash
 Copy code
 mvn clean install
+
 Step 3: Build Docker Images
 Build Docker images for each project in the repository. Navigate to each project's directory and build the Docker image:
 
@@ -31,7 +34,7 @@ cd project1
 docker build -t project1-image .
 cd ../project2
 docker build -t project2-image .
-# Repeat for other projects as needed
+
 Step 4: Docker Compose
 Navigate back to the root directory of the project and use Docker Compose to start the services. The provided docker-compose.yml file defines the services and their configurations:
 
